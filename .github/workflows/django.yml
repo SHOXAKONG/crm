@@ -13,9 +13,9 @@ jobs:
       postgres:
         image: postgres:16
         env:
-          POSTGRES_DB: test_db
-          POSTGRES_USER: test_user
-          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: djangoproject
+          POSTGRES_USER: admin_user
+          POSTGRES_PASSWORD: 1234
         ports:
           - 5433:5432
         options: >-
@@ -24,14 +24,14 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-    env:
-        SECRET_KEY: test
-        DEBUG: True
-        NAME: test_db
-        USER: admin_user
-        PASSWORD: 1234
-        HOST: localhost
-        PORT: 5433
+#    env:
+#        SECRET_KEY: test
+#        DEBUG: True
+#        NAME: djangoproject
+#        USER: admin_user
+#        PASSWORD: 1234
+#        HOST: localhost
+#        PORT: 5432
 
     steps:
         - uses: actions/checkout@v2
