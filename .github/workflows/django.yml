@@ -17,7 +17,7 @@ jobs:
           POSTGRES_USER: admin_user
           POSTGRES_PASSWORD: 1234
         ports:
-          - 5432:5432
+          - 5433:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -28,7 +28,7 @@ jobs:
       DB_NAME: djangoproject
       DB_USER: admin_user
       DB_PASSWORD: 1234
-      DB_HOST: postgres
+      DB_HOST: 16.171.1.72
       DB_PORT: 5432
 
     steps:
