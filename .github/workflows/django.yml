@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:14
+        image: postgres:16
         env:
           POSTGRES_DB: test_db
           POSTGRES_USER: test_user
           POSTGRES_PASSWORD: test_password
         ports:
-          - 5432:5432
+          - 5433:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -25,10 +25,13 @@ jobs:
           --health-retries 5
 
     env:
-      NAME: djangoproject
-      USER: admin_user
-      PASSWORD: 1234
-      HOST: localhost
+        SECRET_KEY: test
+        DEBUG: True
+        NAME: test_db
+        USER: admin_user
+        PASSWORD: 1234
+        HOST: localhost
+        PORT: 5433
 
     steps:
         - uses: actions/checkout@v2
