@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  web:
+    image: shoxakong/django-image:latest  # Use the pushed image from Docker Hub
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env  # Make sure this .env file exists on your server with correct variables
+    depends_on:
+      - db
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: always   # Restart policy for production
+
+  db:
+    image: postgres:16
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: djangoproject
+      POSTGRES_USER: admin_user
+      POSTGRES_PASSWORD: 1234
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  postgres_data:
