@@ -139,5 +139,3 @@ cython_debug/
 
 static_root
 media_root
-
-.github/workflows/ci-cd.yml
