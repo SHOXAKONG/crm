@@ -75,12 +75,12 @@ WSGI_APPLICATION = 'djcrm.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('POSTGRES_DB', 'djangoproject'),
-        'USER': env('POSTGRES_USER', 'admin_user'),
-        'PASSWORD': env('POSTGRES_PASSWORD', '1234'),
-        'HOST': env('POSTGRES_HOST', 'db'),  # 'db' is the service name in Compose
-        'PORT': env('POSTGRES_PORT', '5432'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'djangoproject',
+        'USER': 'admin_user',
+        'PASSWORD': '1234',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
