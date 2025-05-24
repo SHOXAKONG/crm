@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   web:
     image: shoxakong/django-image:latest
@@ -7,21 +9,21 @@ services:
       - .env
     depends_on:
       - db
-    volumes:
-      - static_volume:/app/static
     command: gunicorn djcrm.wsgi:application --bind 0.0.0.0:8000
     restart: always
+    volumes:
+      - static_volume:/app/static
 
   nginx:
     image: nginx:latest
     container_name: django_nginx
     ports:
       - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-      - static_volume:/static
     depends_on:
       - web
+    volumes:
+      - ./nginx/sites-available/crm:/etc/nginx/conf.d/default.conf
+      - static_volume:/static
 
   db:
     image: postgres:16
