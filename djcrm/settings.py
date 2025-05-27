@@ -1,5 +1,6 @@
 from pathlib import Path
 import environ
+from decouple import config
 
 env = environ.Env(
     DEBUG=(bool, False)
@@ -9,8 +10,8 @@ READ_DOT_ENV_FILE = env.bool('READ_DOT_ENV_FILE', default=False)
 if READ_DOT_ENV_FILE:
     environ.Env.read_env()
 
-DEBUG = True
-SECRET_KEY = "1234"
+DEBUG = config("DEBUG", default=True)
+SECRET_KEY = config("SECRET_KEY", default='TEST')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -73,13 +74,14 @@ WSGI_APPLICATION = 'djcrm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'djangoproject',
-        'USER': 'admin_user',
-        'PASSWORD': '1234',
-        'HOST': '13.49.240.177',
+        'NAME': config('DB_NAME', default='djangoproject'),
+        'USER': config('DB_USER', default='admin_user'),
+        'PASSWORD': config('DB_PASSWORD', default='1234'),
+        'HOST': config('DB_HOST', default='localhost'),
         'PORT': '5432',
     }
 }
@@ -175,4 +177,3 @@ LOGGING = {
 TAILWIND_APP_NAME = 'theme'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
