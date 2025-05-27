@@ -26,18 +26,5 @@ services:
       - ./nginx/sites-available/crm.conf:/etc/nginx/conf.d/crm.conf
       - static_volume:/static
 
-  db:
-    image: postgres:16
-    ports:
-      - "5433:5432"
-    environment:
-      POSTGRES_DB: djangoproject
-      POSTGRES_USER: admin_user
-      POSTGRES_PASSWORD: 1234
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: always
-
 volumes:
-  postgres_data:
   static_volume:
