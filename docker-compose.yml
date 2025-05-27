@@ -5,7 +5,7 @@ services:
     build: .
     image: shoxakong/django-image:latest
     ports:
-      - "8000:8000"
+      - "8080:8080"
     env_file:
       - .env
     depends_on:
