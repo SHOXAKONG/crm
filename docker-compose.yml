@@ -19,7 +19,7 @@ services:
     image: nginx:latest
     container_name: django_nginx
     ports:
-      - "80:80"
+      - "8000:8000"
     depends_on:
       - web
     volumes:
