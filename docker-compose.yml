@@ -5,7 +5,7 @@ services:
     build: .
     image: shoxakong/django-image:latest
     ports:
-      - "8080:8080"
+      - "8000:8000"  # serverda Nginx 8000-portda proxy qiladi
     env_file:
       - .env
     restart: always
@@ -13,17 +13,5 @@ services:
       - static_volume:/app/static
     entrypoint: ["/app/entrypoint.sh"]
 
-  nginx:
-    image: nginx:latest
-    container_name: django_nginx
-    ports:
-      - "8000:8000"
-    depends_on:
-      - web
-    volumes:
-      - ./nginx/sites-available/crm.conf:/etc/nginx/conf.d/crm.conf
-      - static_volume:/static
-
 volumes:
   static_volume:
-
