@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   web:
+    build: .
     image: shoxakong/django-image:latest
     ports:
       - "8000:8000"
@@ -9,10 +10,10 @@ services:
       - .env
     depends_on:
       - db
-    command: gunicorn djcrm.wsgi:application --bind 0.0.0.0:8000
     restart: always
     volumes:
       - static_volume:/app/static
+    entrypoint: ["/app/entrypoint.sh"]
 
   nginx:
     image: nginx:latest
