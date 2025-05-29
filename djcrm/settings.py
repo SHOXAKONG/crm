@@ -16,7 +16,7 @@ SECRET_KEY = config("SECRET_KEY", default='TEST')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ALLOWED_HOSTS = ['13.49.240.177', 'localhost']
+ALLOWED_HOSTS = ['13.49.240.177', 'localhost', '51.21.246.148']
 
 # Application definition
 
