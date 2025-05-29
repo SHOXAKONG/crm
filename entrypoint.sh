@@ -1,13 +1,13 @@
 #!/bin/sh
 
-echo "Waiting for PostgreSQL..."
+# Exit immediately if a command exits with a non-zero status.
+set -e
 
-while ! nc -z $DB_HOST $DB_PORT; do
-  sleep 0.5
-done
+echo "Running database migrations..."
+python manage.py migrate
 
-echo "PostgreSQL started"
-
-python manage.py migrate --noinput
+echo "Collecting static files..."
 python manage.py collectstatic --noinput
-gunicorn djcrm.wsgi:application --bind 0.0.0.0:8080
+
+echo "Starting Gunicorn..."
+exec gunicorn crm.wsgi:application --bind 0.0.0.0:8000

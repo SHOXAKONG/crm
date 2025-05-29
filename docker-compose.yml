@@ -1,28 +1,17 @@
 version: "3.9"
-
 services:
   web:
     build: .
-    image: shoxakong/django-image:latest
-    ports:
-      - "8080:8080"
-    env_file:
-      - .env
-    restart: always
-    volumes:
-      - static_volume:/app/static
-    entrypoint: ["/app/entrypoint.sh"]
-
-  nginx:
-    image: nginx:latest
-    container_name: django_nginx
     ports:
       - "8000:8000"
-    depends_on:
-      - web
+    env_file:
+      - .env
+    command: gunicorn crm.wsgi:application --bind 0.0.0.0:8000
+    restart: always
     volumes:
-      - ./nginx/sites-available/crm.conf:/etc/nginx/conf.d/crm.conf
-      - static_volume:/static
+      - static_volume:/app/staticfiles
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
   static_volume:

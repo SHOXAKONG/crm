@@ -17,7 +17,10 @@ COPY . /app
 # RUN python -m venv venv
 # RUN . venv/bin/activate
 
-RUN chmod +x /app/entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+
 
 # Kerakli kutubxonalarni o'rnatish
 RUN pip install --upgrade pip && pip install -r requirements.txt
@@ -32,5 +35,4 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 EXPOSE 8000
 
 # Django serverni ishga tushirish
-CMD ["gunicorn", "djcrm.wsgi:application", "--bind", "0.0.0.0:8000"]
-
+CMD ["gunicorn", "crm.wsgi:application", "--bind", "0.0.0.0:8000"]
