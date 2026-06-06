@@ -22,6 +22,7 @@ jobs:
         port: 22
         source: "."
         target: "/opt/crm"
+        debug: 'true'
 
     - name: Execute remote SSH commands
       uses: appleboy/ssh-action@v1.0.3
