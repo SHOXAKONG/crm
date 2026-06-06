@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>
+        {% if user.is_superuser or user.is_staff %}
+            All Leads
+        {% else %}
+            Your Leads
+        {% endif %}
+    </h2>
+    <a href="{% url 'lead-create' %}" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Add New Lead
+    </a>
+</div>
+
+<form method="get" id="search-form" style="position: relative;">
+    <input class="search" id="search-input" type="text" name="q" placeholder="Search leads..." value="{{ request.GET.q }}">
+    <button type="button" id="clear-btn" style="position: absolute; left: 475px; top: 50%; transform: translateY(-50%); display: none;">×</button>
+    <button class="btn btn-primary" type="submit">Search</button>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort={% if request.GET.sort == 'name' %}default{% else %}name{% endif %}" style="text-decoration: none; color: black;">
+                    Name
+                    {% if request.GET.sort == 'name' %}
+                        ↑
+                    {% else %}
+                        ↓
+                    {% endif %}
+                </a>
+            </th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Deal Price</th>
+            <th>
+                <a href="#" id="status-link" style="text-decoration: none; color: black;">
+                    Status
+                </a>
+                <div id="status-dropdown" style="display: none; position: absolute; background: #fff; border: 1px solid #ccc; padding: 10px;">
+                    <button type="submit" name="status" value="New">New</button>
+                    <button type="submit" name="status" value="Contacted">Contacted</button>
+                    <button type="submit" name="status" value="Converted">Converted</button>
+                    <button type="submit" name="status" value="Failed">Failed</button>
+                </div>
+            </th>
+            {% if user.is_superuser or user.is_staff %}
+            <th>Created By</th>
+            {% endif %}
+            <th>Actions</th>
+            <th>Notes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for lead in leads %}
+        <tr>
+            <td>{{ lead.name }}</td>
+            <td>{{ lead.formatted_phone }}</td>
+            <td>{{ lead.email }}</td>
+            <td>
+                {% if lead.deal_price %}
+                    {% if lead.currency == 'USD' %}${% elif lead.currency == 'EUR' %}€{% elif lead.currency == 'GBP' %}£{% endif %}
+                    {{ lead.deal_price }}
+                {% else %}
+                    <span class="text-muted">Not set</span>
+                {% endif %}
+            </td>
+            <td>
+                <span class="badge bg-{% if lead.status == 'new' %}warning{% elif lead.status == 'contacted' %}info{% elif lead.status == 'failed' %}danger{% else %}success{% endif %}">
+                    {{ lead.get_status_display }}
+                </span>
+            </td>
+            {% if user.is_superuser or user.is_staff %}
+            <td>{{ lead.created_by.username }}</td>
+            {% endif %}
+            <td>
+                <a href="{% url 'lead-update' lead.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+            </td>
+            <td>
+                {% if lead.notes %}  <!-- Only show if notes exist -->
+                <button class="btn btn-sm btn-link text-dark view-notes"
+                        data-bs-toggle="popover"
+                        title="Notes for {{ lead.name }}"
+                        data-bs-content="{{ lead.notes }}">
+                    <i class="fas fa-file-alt"></i>
+                </button>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="{% if user.is_superuser or user.is_staff %}6{% else %}4{% endif %}">No leads found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize popovers with hover behavior
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+
+    popoverTriggerList.forEach(function(element) {
+        const popover = new bootstrap.Popover(element, {
+            trigger: 'manual', // We'll control it manually
+            placement: 'top',
+            html: true
+        });
+
+        // Show popover on click
+        element.addEventListener('click', function(e) {
+            e.preventDefault();
+            popover.show();
+        });
+
+        // Hide popover when mouse leaves icon or popover
+        element.addEventListener('mouseleave', function(e) {
+            // Check if mouse is leaving to outside the icon or popover
+            setTimeout(() => {
+                if (!document.querySelector('.popover:hover') &&
+                    !element.matches(':hover')) {
+                    popover.hide();
+                }
+            }, 100);
+        });
+
+        // Also handle popover hover
+        document.addEventListener('mouseover', function(e) {
+            if (!e.target.closest('[data-bs-toggle="popover"]') &&
+                !e.target.closest('.popover')) {
+                popover.hide();
+            }
+        });
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('search-input');
+    const clearBtn = document.getElementById('clear-btn');
+
+    function toggleClearButton() {
+        if (input.value.length > 0) {
+            clearBtn.style.display = 'block';
+        } else {
+            clearBtn.style.display = 'none';
+        }
+    }
+
+    input.addEventListener('input', toggleClearButton);
+
+    clearBtn.addEventListener('click', function() {
+        input.value = '';
+        clearBtn.style.display = 'none';
+        document.getElementById('search-form').submit();
+    });
+
+    // Initialize on page load
+    toggleClearButton();
+});
+</script>
+
+<script>
+    // Toggle dropdown visibility
+    document.getElementById('status-link').addEventListener('click', function(event) {
+        event.preventDefault();  // Prevent default link behavior
+        var dropdown = document.getElementById('status-dropdown');
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+    });
+</script>
+
+
+<style>
+/* Ensure popover can be hovered */
+.popover {
+    pointer-events: auto;
+}
+
+.search{
+    width: 500px;
+    padding-bottom: 7px;
+}
+
+.search::placeholder{
+    font-size: 14px;
+}
+
+#clear-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #999;
+}
+
+#clear-btn:hover {
+    color: #333;
+}
+
+</style>
+{% endblock %}

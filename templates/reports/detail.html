@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ report.title }}</h1>
+<div class="card mt-4">
+    <div class="card-header">
+        Report Details
+    </div>
+    <div class="card-body">
+        <pre>{{ report.content|json_script:"report-data" }}</pre>
+        <div id="report-visualization"></div>
+    </div>
+</div>
+<div class="btn-group mt-3">
+    <a href="{% url 'report-pdf' report.pk %}" class="btn btn-danger">
+        <i class="fas fa-file-pdf"></i> Export PDF
+    </a>
+    <a href="{% url 'report-excel' report.pk %}" class="btn btn-success">
+        <i class="fas fa-file-excel"></i> Export Excel
+    </a>
+</div>
+
+<script>
+    // Add your visualization logic here using the report data
+    const reportData = JSON.parse(document.getElementById('report-data').textContent);
+    console.log(reportData);
+    // Example: Use Chart.js or other visualization library
+</script>
+{% endblock %}

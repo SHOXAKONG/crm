@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+
+
+
+<h1>Welcome to CRM System, {{ user.username }}!</h1>
+{% if user.is_authenticated %}
+<!--    <p>Hello, {{ user.username }}! <a href="{% url 'login' %}">Logout</a></p>-->
+    <a href="{% url 'lead-list' %}" class="btn btn-primary">View Leads</a>
+{% else %}
+    <p>Please <a href="{% url 'login' %}">login</a> or <a href="{% url 'register' %}">register</a></p>
+{% endif %}
+
+
+<div class="container-fluid">
+    <h1 class="mt-4">CRM Dashboard</h1>
+
+    <div class="row mt-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Leads</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ lead_stats.total }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Deals</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ deal_stats.total }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-handshake fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total Value</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                ${{ lead_stats.total_value|floatformat:2 }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div style="color: #f6c23e;" class="text-xs font-weight-bold text-uppercase mb-1">
+                                New Leads</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ lead_stats.new }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i style="color: #f6c23e;" class="fas fa-plus-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div style="color: red;" class="text-xs font-weight-bold text-uppercase mb-1">
+                                Failed Leads</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ lead_stats.failed }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i style="color: red;" class="fas fa-times-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div style="color: #1cc88a;" class="text-xs font-weight-bold text-uppercase mb-1">
+                                Converted Leads</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ lead_stats.converted }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i style="color: #1cc88a;" class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div style="color: red;" class="text-xs font-weight-bold text-uppercase mb-1">
+                                Lost Deals</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ deal_stats.lost }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i style="color: red;" class="fas fa-times-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div style="color: #1cc88a;" class="text-xs font-weight-bold text-uppercase mb-1">
+                                Won Deals</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ deal_stats.won }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i style="color: #1cc88a;" class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <!-- Charts and Tables Row -->
+    <div class="row">
+        <!-- Pie Chart -->
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Lead Status Distribution</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie pt-4 pb-2">
+                        <canvas id="statusPieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Leads Table -->
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Leads</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Value</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for lead in recent_leads %}
+                                <tr>
+                                    <td>{{ lead.name }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if lead.status == 'new' %}warning{% elif lead.status == 'contacted' %}info{% elif lead.status == 'failed' %}danger{% else %}success{% endif %}">
+                                            {{ lead.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if lead.deal_price %}
+                                            ${{ lead.deal_price }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ lead.created_at|date:"M d, Y" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+<script>
+// Status Pie Chart
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('statusPieChart');
+
+    const statusData = {
+        labels: [
+            {% for item in status_distribution %}
+                "{{ item.status|title }}"{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ],
+        datasets: [{
+            data: [
+                {% for item in status_distribution %}
+                    {{ item.count }}{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ],
+            backgroundColor: ['#36b9cc', '#1cc88a', '#e74a3b', '#f6c23e'],
+            hoverBackgroundColor: ['#5cccdd', '#3ed89b', '#ee8278', '#f8d36d'],
+        }]
+    };
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: statusData,
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                },
+                datalabels: {
+                    color: '#fff',
+                    font: {
+                        weight: 'bold',
+                        size: 14
+                    },
+                    formatter: (value, context) => {
+                        return value;
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+});
+</script>
+{% endblock %}

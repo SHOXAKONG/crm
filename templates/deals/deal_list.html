@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>
+        {% if user.is_superuser or user.is_staff %}
+            All Deals
+        {% else %}
+            Your Deals
+        {% endif %}
+    </h2>
+    <a href="{% url 'deal-create' %}" class="btn btn-primary mb-3">Add Deal</a>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Amount</th>
+                <th>Currency</th>
+                <th>Contact</th>
+                <th>Status</th>
+                <th>Close Date</th>
+                {% if user.is_superuser or user.is_staff %}
+                <th>Created By</th>
+                {% endif %}
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for deal in deals %}
+            <tr>
+                <td>{{ deal.title }}</td>
+                <td>{{ deal.amount }}</td>
+                <td>{{ deal.currency }}</td>
+                <td>{{ deal.contact.name }}</td>
+                <td>
+                    {% if deal.status == "open" %}
+                        <span class="badge bg-warning text-dark">{{ deal.get_status_display }}</span>
+                    {% elif deal.status == "won" %}
+                        <span class="badge bg-success">{{ deal.get_status_display }}</span>
+                    {% elif deal.status == "lost" %}
+                        <span class="badge bg-danger">{{ deal.get_status_display }}</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ deal.get_status_display }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ deal.close_date|date:"d-m-Y H:i" }}</td>
+                {% if user.is_superuser or user.is_staff %}
+                <td>{{ deal.created_by.username }}</td>
+                {% endif %}
+                <td>
+                    <a href="{% url 'deal-update' deal.id %}" class="btn btn-sm btn-secondary">Edit</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No deals found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
