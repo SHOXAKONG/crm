@@ -177,3 +177,4 @@ LOGIN_REDIRECT_URL = '/leads/'
 LOGOUT_REDIRECT_URL = '/login/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+CSRF_TRUSTED_ORIGINS = ["https://crm.shoxakong.uz"]
